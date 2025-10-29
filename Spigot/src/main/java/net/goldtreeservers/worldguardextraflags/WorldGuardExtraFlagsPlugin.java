@@ -86,7 +86,9 @@ public class WorldGuardExtraFlagsPlugin extends JavaPlugin
 			flagRegistry.register(Flags.CHUNK_UNLOAD);
 			flagRegistry.register(Flags.ITEM_DURABILITY);
 			flagRegistry.register(Flags.JOIN_LOCATION);
+
 			flagRegistry.register(Flags.THROW_EGG);
+			flagRegistry.register(Flags.ARROW_DAMAGE_FOR_PLAYERS);
 		}
 		catch (Exception e)
 		{
@@ -132,6 +134,9 @@ public class WorldGuardExtraFlagsPlugin extends JavaPlugin
 		this.sessionManager.registerHandler(CommandOnExitFlagHandler.FACTORY(), null);
 		this.sessionManager.registerHandler(ConsoleCommandOnEntryFlagHandler.FACTORY(), null);
 		this.sessionManager.registerHandler(ConsoleCommandOnExitFlagHandler.FACTORY(), null);
+
+		this.sessionManager.registerHandler(ArrowDamageForPlayersFlagHandler.FACTORY(), null);
+		this.sessionManager.registerHandler(ThrowEggFlagHandler.FACTORY(), null);
 
 		this.getServer().getPluginManager().registerEvents(new PlayerListener(this, this.worldGuardPlugin, this.regionContainer, this.sessionManager), this);
 		this.getServer().getPluginManager().registerEvents(new BlockListener(this.worldGuardPlugin, this.regionContainer, this.sessionManager), this);

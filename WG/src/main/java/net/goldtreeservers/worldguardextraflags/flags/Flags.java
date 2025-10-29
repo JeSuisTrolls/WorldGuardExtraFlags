@@ -59,5 +59,7 @@ public final class Flags
 	
 	public final static LocationFlag JOIN_LOCATION = new LocationFlag("join-location");
 
-	public final static StateFlag THROW_EGG = new StateFlag("trow-egg", false);
+	public final static StateFlag THROW_EGG = new StateFlag("throw-egg", true);
+
+	public final static StateFlag ARROW_DAMAGE_FOR_PLAYERS = new StateFlag("arrow-damage-for-players", true);
 }

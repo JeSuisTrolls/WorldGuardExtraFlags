@@ -7,11 +7,13 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.session.SessionManager;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -218,8 +220,6 @@ public class PlayerListener implements Listener
 	{
 		Player player = event.getPlayer();
 
-		//Some plugins toggle flight off on world change based on permissions,
-		//so we need to make sure to force the flight status.
 		Boolean value = this.sessionManager.get(this.worldGuardPlugin.wrapPlayer(player)).getHandler(FlyFlagHandler.class).getCurrentValue();
 		if (value != null)
 		{
@@ -238,6 +238,22 @@ public class PlayerListener implements Listener
 				if (event.getItem() != null && event.getItem().getType() == Material.EGG)
 					event.setCancelled(true);
 			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	public void onPlayerDamage(EntityDamageByEntityEvent event) {
+		if (event.getEntity() instanceof Player player) {
+            LocalPlayer localPlayer = this.worldGuardPlugin.wrapPlayer(player);
+				if (this.regionContainer.createQuery().queryState(localPlayer.getLocation(), localPlayer, Flags.ARROW_DAMAGE_FOR_PLAYERS) == State.DENY)
+				{
+					if (event.getDamager() instanceof Arrow arrow) {
+						if (arrow.getShooter() instanceof Player) {
+							event.setCancelled(true);
+						}
+					}
+				}
+
 		}
 	}
 }
